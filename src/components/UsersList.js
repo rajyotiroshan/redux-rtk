@@ -8,6 +8,9 @@ function UsersList(props) {
   const [isLoadingUser, setIsLoadingUser] = useState(false);
   const [loadingUserError, setLoadingUserError] = useState(null);
 
+  const [isCreatingUser, setIsCreatingUser] = useState(false);
+  const [creatingUserError, setCreatingUserError] = useState(null);
+
   const dispatch = useDispatch();
 
   const { data } = useSelector((state) => {
@@ -20,13 +23,16 @@ function UsersList(props) {
     dispatch(fetchUsers())
       .unwrap() //gives brand new promise that follow general promise rule
       .then(() => {
-        console.log("success");
+        //console.log("success");
         setIsLoadingUser(false);
         setLoadingUserError(false);
       })
       .catch(() => {
-        console.log("failed");
+        //console.log("failed");
         setLoadingUserError(true);
+        setIsLoadingUser(false);
+      })
+      .finally(() => {
         setIsLoadingUser(false);
       });
 
@@ -35,7 +41,11 @@ function UsersList(props) {
   }, [dispatch]);
 
   const handleUserAdd = () => {
-    dispatch(addUser());
+    setIsCreatingUser(true);
+    dispatch(addUser())
+      .unwrap()
+      .catch((err) => setCreatingUserError(err))
+      .finally(() => setIsCreatingUser(false));
   };
 
   if (isLoadingUser) {
@@ -59,7 +69,12 @@ function UsersList(props) {
     <div>
       <div className="flex flex-row justify-between m-3">
         <h1 className="m-2 text-xl">Users</h1>
-        <Button onClick={handleUserAdd}>+ Add User</Button>
+        {isCreatingUser ? (
+          "Creating User..."
+        ) : (
+          <Button onClick={handleUserAdd}>+ Add User</Button>
+        )}
+        {creatingUserError && "Error Creating user..."}
       </div>
       {renderedUser}
     </div>
