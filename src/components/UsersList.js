@@ -1,51 +1,48 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUsers, addUser } from "../store";
 import Button from "./Button";
 import Skelton from "./Skelton";
 
-function UsersList(props) {
-  const [isLoadingUser, setIsLoadingUser] = useState(false);
-  const [loadingUserError, setLoadingUserError] = useState(null);
-
-  const [isCreatingUser, setIsCreatingUser] = useState(false);
-  const [creatingUserError, setCreatingUserError] = useState(null);
+//custom Hook
+//for disptaching thunk
+//and maintaining loading and error state
+function useThunk(thunk) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const dispatch = useDispatch();
+
+  const runThunk = useCallback(() => {
+    setIsLoading(true);
+
+    dispatch(thunk())
+      .unwrap()
+      .catch((err) => setError(err))
+      .finally(() => setIsLoading(false));
+  }, [dispatch, thunk]);
+
+  return [runThunk, isLoading, error];
+}
+
+function UsersList(props) {
+  const [doFetchUsers, isLoadingUser, loadingUserError] = useThunk(fetchUsers);
+
+  const [doCreateUser, isCreatingUser, creatingUserError] = useThunk(addUser);
 
   const { data } = useSelector((state) => {
     return state.users; //{data:[], isLoading: false, error: null}
   });
 
   useEffect(() => {
-    setIsLoadingUser(true);
-    //dispatch returns a promise
-    dispatch(fetchUsers())
-      .unwrap() //gives brand new promise that follow general promise rule
-      .then(() => {
-        //console.log("success");
-        setIsLoadingUser(false);
-        setLoadingUserError(false);
-      })
-      .catch(() => {
-        //console.log("failed");
-        setLoadingUserError(true);
-        setIsLoadingUser(false);
-      })
-      .finally(() => {
-        setIsLoadingUser(false);
-      });
+    doFetchUsers();
 
     //BAD
     //setLoadingUserError(fasle) ;; wil vbe called immediately after dispatch
-  }, [dispatch]);
+  }, [doFetchUsers]);
 
   const handleUserAdd = () => {
-    setIsCreatingUser(true);
-    dispatch(addUser())
-      .unwrap()
-      .catch((err) => setCreatingUserError(err))
-      .finally(() => setIsCreatingUser(false));
+    doCreateUser();
   };
 
   if (isLoadingUser) {
