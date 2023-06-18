@@ -1,29 +1,9 @@
-import { useEffect, useState, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { fetchUsers, addUser } from "../store";
 import Button from "./Button";
 import Skelton from "./Skelton";
-
-//custom Hook
-//for disptaching thunk
-//and maintaining loading and error state
-function useThunk(thunk) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  const dispatch = useDispatch();
-
-  const runThunk = useCallback(() => {
-    setIsLoading(true);
-
-    dispatch(thunk())
-      .unwrap()
-      .catch((err) => setError(err))
-      .finally(() => setIsLoading(false));
-  }, [dispatch, thunk]);
-
-  return [runThunk, isLoading, error];
-}
+import { useThunk } from "../hooks/use-thunk";
 
 function UsersList(props) {
   const [doFetchUsers, isLoadingUser, loadingUserError] = useThunk(fetchUsers);
