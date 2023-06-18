@@ -24,24 +24,25 @@ function UsersList(props) {
   const handleUserAdd = () => {
     doCreateUser();
   };
+  let content;
 
   if (isLoadingUser) {
     //show Skelton
-    return <Skelton times={6} className="h-10 w-full" />;
+    content = <Skelton times={6} className="h-10 w-full" />;
+  } else if (loadingUserError) {
+    content = <div>Error fetching data...</div>;
+  } else {
+    content = data.map((user) => {
+      return (
+        <div key={user.id} className="mb-2 order rounded">
+          <div className="flex p-2 justify-between items center cursor-pointer">
+            {user.name}
+          </div>
+        </div>
+      );
+    });
   }
 
-  if (loadingUserError) {
-    return <div>Error fetching data...</div>;
-  }
-  const renderedUser = data.map((user) => {
-    return (
-      <div key={user.id} className="mb-2 order rounded">
-        <div className="flex p-2 justify-between items center cursor-pointer">
-          {user.name}
-        </div>
-      </div>
-    );
-  });
   return (
     <div>
       <div className="flex flex-row justify-between m-3">
@@ -53,7 +54,7 @@ function UsersList(props) {
 
         {creatingUserError && "Error Creating user..."}
       </div>
-      {renderedUser}
+      {content}
     </div>
   );
 }
