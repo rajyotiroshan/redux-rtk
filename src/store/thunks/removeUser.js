@@ -4,11 +4,11 @@ import axios from "axios";
 const removeUser = createAsyncThunk("remove/user", async (user) => {
   //assume that async func ic called with user obj
 
-  const response = await axios.delete(`http://localhost:3005/users/${user.id}`);
+  await axios.delete(`http://localhost:3005/users/${user.id}`);
 
   //return
   // A BUG
-  return response.data;
+  return user; //will be as action.payload for reducer
 });
 
 export { removeUser };

@@ -63,7 +63,9 @@ const userSlice = createSlice({
     builder.addCase(removeUser.fulfilled, (state, action) => {
       //update state with fetched data
       state.isLoading = false;
-      state.data.filter((user) => user.id !== action.payload.id); // action.payload=> newly added user objecrt; //{} list of users
+      state.data = state.data.filter((user) => {
+        return user.id !== action.payload.id;
+      }); // action.payload=> newly added user objecrt; //{} list of users
     });
 
     builder.addCase(removeUser.rejected, (state, action) => {
