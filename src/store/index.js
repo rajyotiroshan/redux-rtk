@@ -1,16 +1,12 @@
-import { userReducer } from "./slices/UsersSlice";
+import { configureStore } from '@reduxjs/toolkit';
+import { usersReducer } from './slices/usersSlice';
 
-import { configureStore } from "@reduxjs/toolkit";
-
-const store = configureStore({
+export const store = configureStore({
   reducer: {
-    users: userReducer,
+    users: usersReducer,
   },
 });
 
-export { store };
-
-export * from "./thunks/fetchUsers";
-export * from "./thunks/addUser";
-
-export * from "./thunks/removeUser";
+export * from './thunks/fetchUsers';
+export * from './thunks/addUser';
+export * from './thunks/removeUser';
