@@ -6,6 +6,13 @@ import ExpandablePanel from "./ExpandablePanel";
 
 function AlbumsList({ user }) {
   const { data, error, isLoading } = useFetchAlbumsQuery(user);
+  //useFetchAlbumsQuery(user);
+  //array destructuring not obj destruc
+  const [addAlbum, results] = useAddAlbumMutation(); //no user arg
+
+  const handleAlbum = () => {
+    addAlbum(user);
+  };
 
   let content;
   if (isLoading) {
@@ -25,6 +32,10 @@ function AlbumsList({ user }) {
 
   return (
     <div>
+      <div>
+        Album for {user.name}
+        <Button onClick={handleAlbum}>+ Album</Button>
+      </div>
       <div>{content}</div>
     </div>
   );
