@@ -6,7 +6,7 @@ import ExpandablePanel from "./ExpandablePanel";
 import AlbumListItem from "./AlbumsListItem";
 
 function AlbumsList({ user }) {
-  const { data, error, isLoading } = useFetchAlbumsQuery(user);
+  const { data, error, isFetching } = useFetchAlbumsQuery(user);
   //useFetchAlbumsQuery(user);
   //array destructuring not obj destruc
   const [addAlbum, results] = useAddAlbumMutation(); //no user arg
@@ -16,7 +16,7 @@ function AlbumsList({ user }) {
   };
 
   let content;
-  if (isLoading) {
+  if (isFetching) {
     content = <Skelton className="h-10 w-full" times={3} />;
   } else if (error) {
     content = <div> Error loading albums.</div>;
