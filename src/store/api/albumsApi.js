@@ -3,7 +3,7 @@ import { faker } from "@faker-js/faker";
 
 const albumsApi = createApi({
   reducerPath: "albums",
-  baseQuery: fetchBaseQuery({ 
+  baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:3005",
     fetchFn: async (...args) => {
       //REMOVE FOR PRODUCTION
@@ -43,6 +43,15 @@ const albumsApi = createApi({
           };
         },
       }),
+
+      removeAlbum: builder.mutation({
+        query: (album) => {
+          return {
+            url: `/albums/${album.id}`,
+            method: "DELETE",
+          };
+        },
+      }),
     };
   },
 });
@@ -53,5 +62,9 @@ const pause = (duration) => {
     setTimeout(resolve, duration);
   });
 };
-export const { useFetchAlbumsQuery, useAddAlbumMutation } = albumsApi;
+export const {
+  useFetchAlbumsQuery,
+  useAddAlbumMutation,
+  useRemoveAlbumMutation,
+} = albumsApi;
 export { albumsApi };
