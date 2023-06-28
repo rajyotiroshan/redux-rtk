@@ -3,8 +3,13 @@ import { faker } from "@faker-js/faker";
 
 const albumsApi = createApi({
   reducerPath: "albums",
-  baseQuery: fetchBaseQuery({
+  baseQuery: fetchBaseQuery({ 
     baseUrl: "http://localhost:3005",
+    fetchFn: async (...args) => {
+      //REMOVE FOR PRODUCTION
+      await pause(2000);
+      return fetch(...args);
+    },
   }),
   endpoints(builder) {
     return {
@@ -42,5 +47,11 @@ const albumsApi = createApi({
   },
 });
 
+// DEV ONLY!!!
+const pause = (duration) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, duration);
+  });
+};
 export const { useFetchAlbumsQuery, useAddAlbumMutation } = albumsApi;
 export { albumsApi };
