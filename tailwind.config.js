@@ -14,4 +14,10 @@ module.exports = {
     },
   },
   plugins: [],
+  "files.associations": {
+    "*.css": "tailwindcss",
+  },
+  "editor.quickSuggestions": {
+    strings: true,
+  },
 };
